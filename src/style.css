@@ -1,0 +1,23 @@
+body, html {
+  margin: 0;
+  height: 100%;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  height: 100%;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.cell {
+  height: 25px;
+  width: 25px;
+  border: 1px solid black;
+}
