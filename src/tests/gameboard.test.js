@@ -43,7 +43,7 @@ describe('gameboard tests', () => {
     expect(() => example.placeShip(3, [0, 0], [2, 2])).toThrow()
   })
 
-  test.only('receiving attacks', () => {
+  test('receiving attacks', () => {
     const example = gameboard()
     const ship1 = example.placeShip(3, [2, 2], [0, 2])
     const ship2 = example.placeShip(4, [3, 4], [6, 4])
@@ -68,5 +68,14 @@ describe('gameboard tests', () => {
     // when missed attack
     example.receiveAttack(3, 2)
     expect(example.board[3][2]).toEqual('M')
+  })
+
+  test('game over and whiping board', () => {
+    const example = gameboard()
+    const ship1 = example.placeShip(3, [2, 2], [0, 2])
+
+    example.receiveAttack(0, 2)
+    example.receiveAttack(1, 2)
+    example.receiveAttack(2, 2)
   })
 })
