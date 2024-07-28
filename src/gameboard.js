@@ -1,13 +1,17 @@
+const createShip = require('./ship')
+
 const gameboard = () => {
   
   let board = create2DArray(10)
+  let ships = []
   const placeShip = (size, start, end) => {
-    
     // check if we don't go outside the board
     if (!start.every(value => value >= 0 && value < 10) || !end.every(value => value >= 0 && value < 10)) {
       throw new Error('wrong coordinates')
     }
     
+    const ship = createShip(size)
+    ships.push(ship)
     let horizontal = false
     let vertical = false
     
@@ -53,18 +57,56 @@ const gameboard = () => {
     
     // ship placement on the board
     if (horizontal) {
-      board[start[0]].fill('O', start[1], end[1] + 1)
+      for (let i=0; i<size; i++) {
+        board[start[0]][start[1] + i] = 'O'
+        ship.placements.push([start[0], start[1]+i])
+      }
     }
     if (vertical) {
       const col = start[1]
       let i=0
       while (i < size) {
         board[start[0] + i][col] = 'O'
+        ship.placements.push([start[0] + i, col])
         i++
       }
     }
+    return ship
   }
-  return { board, placeShip }
+
+  const receiveAttack = (row, col) => {
+    
+    // check if we don't go outside the board
+    if (!(row >= 0 && row < 10) || !(col >= 0 && col < 10)) {
+      throw new Error('wrong coordinates')
+    }
+
+    // check if it's not already hit place
+    if (board[row][col] === 'X') {
+      throw new Error('you already hit this place')
+    }
+
+    // when hit ship
+    if (board[row][col] === 'O') {
+      board[row][col] = 'X'
+      for (let ship of ships) {
+        for (let place of ship.placements) {
+          if (place[0] === row && place[1] === col) {
+            ship.hit()
+            if (ship.isSunk()) {
+              ships = ships.filter(cur => cur != ship)  // remove ship from list of ships
+            }
+            return
+          }
+        }
+      }
+    // when missed shot
+    } else {
+        board[row][col] = 'M'
+        return
+    }
+  }
+  return { board, placeShip, receiveAttack }
 }
 
 

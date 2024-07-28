@@ -3,7 +3,9 @@ const createShip = (length) => {
     length,
     hits: 0,
     sunk: false,
+    placements: [],
     hit() {
+      if (this.hits + 1 === length) this.sunk = true
       return this.hits++
     },
     isSunk() {
