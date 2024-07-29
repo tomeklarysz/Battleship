@@ -25,4 +25,3 @@ const displayGrids = () => {
 export const initialLoad = () => {
   displayGrids()
 }
-
