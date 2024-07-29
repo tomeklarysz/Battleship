@@ -24,3 +24,18 @@ body, html {
   width: 35px;
   border: 1px solid black;
 }
+
+.ship {
+  background-color: skyblue;
+  border-color: blue;
+}
+
+.shot {
+  background-color: pink;
+  border-color: red;
+  font-weight: bold;
+}
+
+.missed {
+  background-color: gray;
+}

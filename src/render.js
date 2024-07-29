@@ -31,16 +31,34 @@ const placeDummies = (players) => {
   players.opp.gameboard.placeShip(1, [9, 4], [9, 4])
   players.opp.gameboard.placeShip(1, [9, 6], [9, 6])
   players.opp.gameboard.placeShip(1, [5, 6], [5, 6])
+
+  // attacks
+  players.user.gameboard.receiveAttack(7, 8)
+  players.user.gameboard.receiveAttack(0, 0)
 }
 
 const renderBoards = (userBoard, oppBoard) => {
   for (let i=0; i<10; i++) {
     for (let j=0; j<10; j++) {
-      if (userBoard[i][j] === ('O' || 'X' || 'M')) {
-        document.getElementById(`player-${i}-${j}`).textContent = userBoard[i][j]
+      // user board
+      let val = userBoard[i][j]
+      if (val === 'O') {
+        document.getElementById(`player-${i}-${j}`).classList.add('ship')
+      } else if (val === 'X') {
+        document.getElementById(`player-${i}-${j}`).classList.add('shot')
+        document.getElementById(`player-${i}-${j}`).textContent = 'X'
+      } else if (val === 'M') {
+        document.getElementById(`player-${i}-${j}`).classList.add('missed')
       }
-      if (oppBoard[i][j] === ('O' || 'X' || 'M')) {
-        document.getElementById(`opp-${i}-${j}`).textContent = oppBoard[i][j]
+      // opponent board
+      val = oppBoard[i][j]
+      if (val === 'O') {
+        document.getElementById(`opp-${i}-${j}`).classList.add('ship')
+      } else if (val === 'X') {
+        document.getElementById(`opp-${i}-${j}`).classList.add('shot')
+        document.getElementById(`opp-${i}-${j}`).textContent = 'X'
+      } else if (val === 'M') {
+        document.getElementById(`opp-${i}-${j}`).classList.add('missed')
       }
     }
   }
