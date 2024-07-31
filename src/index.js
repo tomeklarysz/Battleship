@@ -1,6 +1,6 @@
 import './style.css';
-import { initialLoad } from './dom';
+import { displayGrids } from './dom';
 import { initialPlayers } from './render';
 
-initialLoad()
+displayGrids()
 initialPlayers()

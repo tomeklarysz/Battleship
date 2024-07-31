@@ -1,4 +1,4 @@
-const displayGrids = () => {
+export const displayGrids = () => {
   
   const container = document.getElementById('container')
   const playerDiv = document.getElementById('player')
@@ -14,14 +14,11 @@ const displayGrids = () => {
     for (let j=0; j<10; j++) {
       const cell = document.createElement('div')
       cell.classList.add('cell')
+      cell.classList.add('opp')
       cell.id = `opp-${i}-${j}`
       oppDiv.appendChild(cell)
     }
   }
   container.appendChild(playerDiv)
   container.appendChild(oppDiv)
-}
-
-export const initialLoad = () => {
-  displayGrids()
 }

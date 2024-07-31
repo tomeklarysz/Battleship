@@ -32,12 +32,9 @@ const placeDummies = (players) => {
   players.opp.gameboard.placeShip(1, [9, 6], [9, 6])
   players.opp.gameboard.placeShip(1, [5, 6], [5, 6])
 
-  // attacks
-  players.user.gameboard.receiveAttack(7, 8)
-  players.user.gameboard.receiveAttack(0, 0)
 }
 
-const renderBoards = (userBoard, oppBoard) => {
+export const renderBoards = (userBoard, oppBoard) => {
   for (let i=0; i<10; i++) {
     for (let j=0; j<10; j++) {
       // user board
@@ -52,9 +49,7 @@ const renderBoards = (userBoard, oppBoard) => {
       }
       // opponent board
       val = oppBoard[i][j]
-      if (val === 'O') {
-        document.getElementById(`opp-${i}-${j}`).classList.add('ship')
-      } else if (val === 'X') {
+      if (val === 'X') {
         document.getElementById(`opp-${i}-${j}`).classList.add('shot')
         document.getElementById(`opp-${i}-${j}`).textContent = 'X'
       } else if (val === 'M') {
@@ -64,9 +59,31 @@ const renderBoards = (userBoard, oppBoard) => {
   }
 }
 
+const readCords = (cell) => {
+  const row = cell.id.split('-')[1]
+  const col = cell.id.split('-')[2]
+  console.log(row, col);
+  return [row, col]
+}
+
+
+const listener = (players) => {
+  const oppDiv = document.getElementById('opp')
+  const oppCells = [...oppDiv.children]
+  
+  oppCells.forEach(item => {
+    item.addEventListener('click', () => {
+      const cords = readCords(item)
+      players.opp.gameboard.receiveAttack(cords[0], cords[1])
+      renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
+    })
+  })
+}
+
 
 export const initialPlayers = () => {
   const players = createPlayers()
   placeDummies(players)
   renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
+  listener(players)
 }
