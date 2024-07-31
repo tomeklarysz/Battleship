@@ -1,6 +1,6 @@
 export const displayGrids = () => {
   
-  const container = document.getElementById('container')
+  const container = document.getElementById('boards')
   const playerDiv = document.getElementById('player')
   const oppDiv = document.getElementById('opp')
   
@@ -21,4 +21,9 @@ export const displayGrids = () => {
   }
   container.appendChild(playerDiv)
   container.appendChild(oppDiv)
+}
+
+export const updateTurnText = (next) => {
+  const div = document.getElementById('turn')
+  div.textContent = `${next} turn`
 }

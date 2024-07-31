@@ -1,3 +1,5 @@
+import { updateTurnText } from './dom'
+
 const player = require('./player')
 
 const createPlayers = () => {
@@ -38,9 +40,7 @@ const renderBoards = (players) => {
   const userBoard = players.user.gameboard.board
   const oppBoard = players.opp.gameboard.board
 
-  const ships = players.opp.gameboard.ships
-  // console.log('opp ships: ', ships);
-  // console.log('user ships: ', players.user.gameboard.ships);
+  // const ships = players.opp.gameboard.ships
   
   for (let i=0; i<10; i++) {
     for (let j=0; j<10; j++) {
@@ -95,10 +95,16 @@ const userTurn = (players) => {
     children[i].addEventListener('click', () => {
       const cords = readCords(children[i])
       try {
-        const isHit = players.opp.gameboard.receiveAttack(players.opp.gameboard.ships, cords[0], cords[1])
-        if (!isHit) players.opp.missedShots++
+        if (isUsersTurn(players)) {
+          const isHit = players.opp.gameboard.receiveAttack(players.opp.gameboard.ships, cords[0], cords[1])
+          if (!isHit) {
+            players.opp.missedShots++
+            updateTurnText('Computer\'s')
+          }
+        }
       } catch (error) {
         console.error(error)
+        alert('You\'ve already hit that cell!')
       }
       renderBoards(players)
     })
@@ -113,11 +119,14 @@ const oppTurn = (players) => {
       const row = randomCell[0]
       const col = randomCell[1]
       const isHit = players.user.gameboard.receiveAttack(players.user.gameboard.ships, row, col)
-      if (!isHit) players.user.missedShots++
+      if (!isHit) {
+        players.user.missedShots++
+        updateTurnText('Your')
+      }
       players.opp.possibleAttacks.splice(index, 1)
       renderBoards(players)
     }
-  }, 2000);
+  }, 3000);
 }
 
 const sunk = (player, row, col) => {
@@ -126,7 +135,6 @@ const sunk = (player, row, col) => {
   for (const ship of ships) {
     for (const cell of ship.placements) {
       if (cell[0] === row && cell[1] === col) {
-        console.log(ship.placements);
         ship.placements.forEach(element => {
           document.getElementById(`opp-${element[0]}-${element[1]}`).classList.remove('shot')
           document.getElementById(`opp-${element[0]}-${element[1]}`).classList.add('sunk')
@@ -146,5 +154,4 @@ export const initialPlayers = () => {
   renderBoards(players)
   userTurn(players)
   oppTurn(players)
-  console.log(players.opp.gameboard.ships);
 }
