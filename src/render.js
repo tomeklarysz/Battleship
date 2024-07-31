@@ -34,7 +34,14 @@ const placeDummies = (players) => {
 
 }
 
-export const renderBoards = (userBoard, oppBoard) => {
+const renderBoards = (players) => {
+  const userBoard = players.user.gameboard.board
+  const oppBoard = players.opp.gameboard.board
+
+  const ships = players.opp.gameboard.ships
+  // console.log('opp ships: ', ships);
+  // console.log('user ships: ', players.user.gameboard.ships);
+  
   for (let i=0; i<10; i++) {
     for (let j=0; j<10; j++) {
       // user board
@@ -44,8 +51,12 @@ export const renderBoards = (userBoard, oppBoard) => {
       } else if (val === 'X') {
         document.getElementById(`player-${i}-${j}`).classList.add('shot')
         document.getElementById(`player-${i}-${j}`).textContent = 'X'
+        
       } else if (val === 'M') {
         document.getElementById(`player-${i}-${j}`).classList.add('missed')
+      } else if (val === 'S') {
+        document.getElementById(`player-${i}-${j}`).classList.add('sunk')
+        sunk(players.user, i, j)
       }
       // opponent board
       val = oppBoard[i][j]
@@ -54,6 +65,9 @@ export const renderBoards = (userBoard, oppBoard) => {
         document.getElementById(`opp-${i}-${j}`).textContent = 'X'
       } else if (val === 'M') {
         document.getElementById(`opp-${i}-${j}`).classList.add('missed')
+      } else if (val === 'S') {
+        document.getElementById(`opp-${i}-${j}`).textContent = 'S'
+        sunk(players.opp, i, j)
       }
     }
   }
@@ -62,7 +76,7 @@ export const renderBoards = (userBoard, oppBoard) => {
 const readCords = (cell) => {
   const row = cell.id.split('-')[1]
   const col = cell.id.split('-')[2]
-  return [row, col]
+  return [Number(row), Number(col)]
 }
 
 
@@ -73,20 +87,23 @@ const isUsersTurn = (players) => {
   return userTurns === oppTurns
 }
 
-const listener = (players) => {
-  const oppDiv = document.getElementById('opp')
-  const oppCells = [...oppDiv.children]
-  
-  oppCells.forEach(item => {
-    item.addEventListener('click', () => {
-      const cords = readCords(item)
-      players.opp.gameboard.receiveAttack(cords[0], cords[1])
-      if (players.opp.gameboard.board[cords[0]][cords[1]] === 'M') players.opp.missedShots++
-      renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
-    })
-  })
-}
 
+const userTurn = (players) => {
+  const children = document.getElementById('opp').children
+
+  for (let i=0; i<children.length; i++) {
+    children[i].addEventListener('click', () => {
+      const cords = readCords(children[i])
+      try {
+        const isHit = players.opp.gameboard.receiveAttack(players.opp.gameboard.ships, cords[0], cords[1])
+        if (!isHit) players.opp.missedShots++
+      } catch (error) {
+        console.error(error)
+      }
+      renderBoards(players)
+    })
+  }
+}
 
 const oppTurn = (players) => {
   setInterval(() => {
@@ -95,19 +112,39 @@ const oppTurn = (players) => {
       const randomCell = players.opp.possibleAttacks[index]
       const row = randomCell[0]
       const col = randomCell[1]
-      const isHit = players.user.gameboard.receiveAttack(row, col)
+      const isHit = players.user.gameboard.receiveAttack(players.user.gameboard.ships, row, col)
       if (!isHit) players.user.missedShots++
       players.opp.possibleAttacks.splice(index, 1)
-      renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
+      renderBoards(players)
     }
   }, 2000);
 }
 
+const sunk = (player, row, col) => {
+  let ships = player.gameboard.ships.filter(element => element.isSunk())
+  document.getElementById(`opp-${row}-${col}`).classList.add('sunk')
+  for (const ship of ships) {
+    for (const cell of ship.placements) {
+      if (cell[0] === row && cell[1] === col) {
+        console.log(ship.placements);
+        ship.placements.forEach(element => {
+          document.getElementById(`opp-${element[0]}-${element[1]}`).classList.remove('shot')
+          document.getElementById(`opp-${element[0]}-${element[1]}`).classList.add('sunk')
+          document.getElementById(`opp-${element[0]}-${element[1]}`).textContent = 'S'
+          player.gameboard.board[element[0]][element[1]] = 'S'
+        })
+        ships = ships.filter(cur => cur != ship)
+        return
+      }
+    }
+  }
+}
 
 export const initialPlayers = () => {
   const players = createPlayers()
   placeDummies(players)
-  renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
-  listener(players)
+  renderBoards(players)
+  userTurn(players)
   oppTurn(players)
+  console.log(players.opp.gameboard.ships);
 }

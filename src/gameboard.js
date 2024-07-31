@@ -74,7 +74,7 @@ const gameboard = () => {
     return ship
   }
 
-  const receiveAttack = (row, col) => {
+  const receiveAttack = (ships, row, col) => {
     
     // check if we don't go outside the board
     if (!(row >= 0 && row < 10) || !(col >= 0 && col < 10)) {
@@ -82,7 +82,7 @@ const gameboard = () => {
     }
 
     // check if it's not already hit place
-    if (board[row][col] === 'X') {
+    if (board[row][col] === 'X' || board[row][col] === 'M') {
       throw new Error('you already hit this place')
     }
 
@@ -94,7 +94,8 @@ const gameboard = () => {
           if (place[0] === row && place[1] === col) {
             ship.hit()
             if (ship.isSunk()) {
-              ships = ships.filter(cur => cur != ship)  // remove ship from list of ships
+              board[row][col] = 'S'
+              // ships = ships.filter(cur => cur != ship)  // remove ship from list of ships
               isGameOver()
             }
             return true
@@ -118,7 +119,7 @@ const gameboard = () => {
     return false
   }
 
-  return { board, placeShip, receiveAttack, isGameOver }
+  return { board, placeShip, receiveAttack, isGameOver, ships }
 }
 
 
