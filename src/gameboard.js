@@ -97,14 +97,14 @@ const gameboard = () => {
               ships = ships.filter(cur => cur != ship)  // remove ship from list of ships
               isGameOver()
             }
-            return
+            return true
           }
         }
       }
     // when missed shot
     } else {
         board[row][col] = 'M'
-        return
+        return false
     }
   }
 

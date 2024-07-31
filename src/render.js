@@ -62,10 +62,16 @@ export const renderBoards = (userBoard, oppBoard) => {
 const readCords = (cell) => {
   const row = cell.id.split('-')[1]
   const col = cell.id.split('-')[2]
-  console.log(row, col);
   return [row, col]
 }
 
+
+const isUsersTurn = (players) => {
+  const userTurns = players.user.missedShots
+  const oppTurns = players.opp.missedShots
+
+  return userTurns === oppTurns
+}
 
 const listener = (players) => {
   const oppDiv = document.getElementById('opp')
@@ -75,9 +81,26 @@ const listener = (players) => {
     item.addEventListener('click', () => {
       const cords = readCords(item)
       players.opp.gameboard.receiveAttack(cords[0], cords[1])
+      if (players.opp.gameboard.board[cords[0]][cords[1]] === 'M') players.opp.missedShots++
       renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
     })
   })
+}
+
+
+const oppTurn = (players) => {
+  setInterval(() => {
+    if (!isUsersTurn(players)) {
+      const index = Math.floor(Math.random() * 100)
+      const randomCell = players.opp.possibleAttacks[index]
+      const row = randomCell[0]
+      const col = randomCell[1]
+      const isHit = players.user.gameboard.receiveAttack(row, col)
+      if (!isHit) players.user.missedShots++
+      players.opp.possibleAttacks.splice(index, 1)
+      renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
+    }
+  }, 2000);
 }
 
 
@@ -86,4 +109,5 @@ export const initialPlayers = () => {
   placeDummies(players)
   renderBoards(players.user.gameboard.board, players.opp.gameboard.board)
   listener(players)
+  oppTurn(players)
 }
