@@ -65,3 +65,12 @@ body, html {
   background-color: red;
   border-color: red;
 }
+
+#restart {
+  border-radius: 5px;
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 5px;
+}

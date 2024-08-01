@@ -27,3 +27,23 @@ export const updateTurnText = (next) => {
   const div = document.getElementById('turn')
   div.textContent = `${next} turn`
 }
+
+export const gameOverDisplay = (player) => {
+  const div = document.getElementById('turn')
+  div.textContent = `Game Over! ${player} win!`
+  createRestart()
+}
+
+const createRestart = () => {
+  const container = document.getElementById('container')
+  
+  const btn = document.createElement('button')
+  btn.id = 'restart'
+  btn.textContent = 'Play again'
+  container.insertBefore(btn, container.firstChild)
+}
+
+export const removeRestart = () => {
+  const btn = document.getElementById('restart')
+  document.getElementById('container').removeChild(btn)
+}

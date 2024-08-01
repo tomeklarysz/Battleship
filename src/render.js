@@ -1,4 +1,4 @@
-import { updateTurnText } from './dom'
+import { gameOverDisplay, updateTurnText } from './dom'
 
 const player = require('./player')
 
@@ -138,16 +138,19 @@ const sunk = (player, row, col) => {
   
   let ships = player.gameboard.ships.filter(element => element.isSunk())
   
-  // when every ship is sunk game over
-  if (ships.length === player.gameboard.ships.length) {
-    console.log('end of the game');
-    // THERE SHOULD BE GAME OVER HANDLER
-  }
-
   // determine on which board is sunk ship
   let type
   if (player.type === 'computer') type = 'opp'
   else type = 'player'
+
+  // when every ship is sunk game over
+  if (ships.length === player.gameboard.ships.length) {
+    let name
+    if (type === 'opp') name = 'You'
+    else name = 'Computer'
+    gameOverDisplay(name)
+    // THERE SHOULD BE GAME OVER HANDLER
+  }
 
   document.getElementById(`${type}-${row}-${col}`).classList.add('sunk')
   for (const ship of ships) {
