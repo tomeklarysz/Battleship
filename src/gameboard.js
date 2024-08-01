@@ -96,7 +96,6 @@ const gameboard = () => {
             ship.hit()
             if (ship.isSunk()) {
               board[row][col] = 'S'
-              isGameOver()
             }
             return true
           }
@@ -109,17 +108,7 @@ const gameboard = () => {
     }
   }
 
-  const isGameOver = () => {
-    if (ships.length === 0) {
-      // whipe board
-      board.fill(new Array(10))
-      console.log('game over!')
-      return true
-    }
-    return false
-  }
-
-  return { board, placeShip, receiveAttack, isGameOver, ships }
+  return { board, placeShip, receiveAttack, ships }
 }
 
 
