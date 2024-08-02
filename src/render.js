@@ -1,4 +1,6 @@
 import { gameOverDisplay, updateTurnText } from './dom'
+import { placeDummies } from './dummies'
+import { gameOver } from './gameOver'
 
 const player = require('./player')
 
@@ -10,31 +12,6 @@ const createPlayers = () => {
   return { user, opp }
 }
 
-// predetermined cords
-const placeDummies = (players) => {
-  players.user.gameboard.placeShip(4, [2, 3], [5, 3])
-  players.user.gameboard.placeShip(3, [1, 6], [3, 6])
-  players.user.gameboard.placeShip(3, [7, 7], [7, 9])
-  players.user.gameboard.placeShip(2, [1, 1], [2, 1])
-  players.user.gameboard.placeShip(2, [5, 1], [6, 1])
-  players.user.gameboard.placeShip(2, [4, 8], [5, 8])
-  players.user.gameboard.placeShip(1, [8, 2], [8, 2])
-  players.user.gameboard.placeShip(1, [9, 4], [9, 4])
-  players.user.gameboard.placeShip(1, [9, 6], [9, 6])
-  players.user.gameboard.placeShip(1, [5, 6], [5, 6])
-
-  players.opp.gameboard.placeShip(4, [2, 3], [5, 3])
-  players.opp.gameboard.placeShip(3, [1, 6], [3, 6])
-  players.opp.gameboard.placeShip(3, [7, 7], [7, 9])
-  players.opp.gameboard.placeShip(2, [1, 1], [2, 1])
-  players.opp.gameboard.placeShip(2, [5, 1], [6, 1])
-  players.opp.gameboard.placeShip(2, [4, 8], [5, 8])
-  players.opp.gameboard.placeShip(1, [8, 2], [8, 2])
-  players.opp.gameboard.placeShip(1, [9, 4], [9, 4])
-  players.opp.gameboard.placeShip(1, [9, 6], [9, 6])
-  players.opp.gameboard.placeShip(1, [5, 6], [5, 6])
-
-}
 
 const renderCell = (players, i, j) => {
   const userBoard = players.user.gameboard.board
@@ -51,7 +28,7 @@ const renderCell = (players, i, j) => {
     document.getElementById(`player-${i}-${j}`).classList.add('missed')
   } else if (val === 'S') {
     document.getElementById(`player-${i}-${j}`).classList.add('sunk')
-    sunk(players.user, i, j)
+    sunk(players, players.user, i, j)
   }
   
   // opponent board
@@ -63,7 +40,7 @@ const renderCell = (players, i, j) => {
     document.getElementById(`opp-${i}-${j}`).classList.add('missed')
   } else if (val === 'S') {
     document.getElementById(`opp-${i}-${j}`).classList.add('sunk')
-    sunk(players.opp, i, j)
+    sunk(players, players.opp, i, j)
   }
 }
 
@@ -134,7 +111,7 @@ const oppTurn = (players) => {
   }, 3000);
 }
 
-const sunk = (player, row, col) => {
+const sunk = (players, player, row, col) => {
   
   let ships = player.gameboard.ships.filter(element => element.isSunk())
   
@@ -149,7 +126,7 @@ const sunk = (player, row, col) => {
     if (type === 'opp') name = 'You'
     else name = 'Computer'
     gameOverDisplay(name)
-    // THERE SHOULD BE GAME OVER HANDLER
+    gameOver()
   }
 
   document.getElementById(`${type}-${row}-${col}`).classList.add('sunk')

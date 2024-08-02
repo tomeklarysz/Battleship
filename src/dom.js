@@ -23,6 +23,14 @@ export const displayGrids = () => {
   container.appendChild(oppDiv)
 }
 
+export const removeGrids = () => {
+  const player = document.getElementById('player')
+  const opp = document.getElementById('opp')
+
+  player.replaceChildren()
+  opp.replaceChildren()
+}
+
 export const updateTurnText = (next) => {
   const div = document.getElementById('turn')
   div.textContent = `${next} turn`
@@ -31,19 +39,15 @@ export const updateTurnText = (next) => {
 export const gameOverDisplay = (player) => {
   const div = document.getElementById('turn')
   div.textContent = `Game Over! ${player} win!`
-  createRestart()
+  showRestart()
 }
 
-const createRestart = () => {
-  const container = document.getElementById('container')
-  
-  const btn = document.createElement('button')
-  btn.id = 'restart'
-  btn.textContent = 'Play again'
-  container.insertBefore(btn, container.firstChild)
-}
-
-export const removeRestart = () => {
+const showRestart = () => {
   const btn = document.getElementById('restart')
-  document.getElementById('container').removeChild(btn)
+  btn.classList.add('show')
+}
+
+export const hideRestart = () => {
+  const btn = document.getElementById('restart')
+  btn.classList.remove('show')
 }

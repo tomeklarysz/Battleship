@@ -64,13 +64,21 @@ body, html {
 .sunk, .sunk:hover {
   background-color: red;
   border-color: red;
+  font-weight: bold;
 }
 
 #restart {
+  display: none;
   border-radius: 5px;
   background-color: #007bff;
   border-color: #007bff;
   color: white;
   text-align: center;
-  padding: 5px;
+  padding: 10px;
+  font-size: large;
+  cursor: pointer;
+}
+
+#restart.show {
+  display: block;
 }
