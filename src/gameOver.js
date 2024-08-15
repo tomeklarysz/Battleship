@@ -1,7 +1,5 @@
-import { displayGrids, hideRestart, removeGrids, removeRestart, updateTurnText } from "./dom";
+import { displayGrids, hideRestart, removeGrids, updateTurnText } from "./dom";
 import { initialPlayers } from "./render";
-
-// const player = require('./player')
 
 export const gameOver = () => {
   

@@ -96,19 +96,23 @@ const userTurn = (players) => {
 const oppTurn = (players) => {
   setInterval(() => {
     if (!isUsersTurn(players)) {
-      const index = Math.floor(Math.random() * 100)
-      const randomCell = players.opp.possibleAttacks[index]
-      const row = randomCell[0]
-      const col = randomCell[1]
-      const isHit = players.user.gameboard.receiveAttack(players.user.gameboard.ships, row, col)
-      if (!isHit) {
-        players.user.missedShots++
-        updateTurnText('Your')
-      }
-      players.opp.possibleAttacks.splice(index, 1)
-      renderCell(players, row, col)
+      randomAttack(players)
     }
   }, 3000);
+}
+
+const randomAttack = (players) => {
+  const index = Math.floor(Math.random() * 100)
+  const randomCell = players.opp.possibleAttacks[index]
+  const row = randomCell[0]
+  const col = randomCell[1]
+  const isHit = players.user.gameboard.receiveAttack(players.user.gameboard.ships, row, col)
+  if (!isHit) {
+    players.user.missedShots++
+    updateTurnText('Your')
+  }
+  players.opp.possibleAttacks.splice(index, 1)
+  renderCell(players, row, col)
 }
 
 const sunk = (players, player, row, col) => {
