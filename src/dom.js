@@ -8,6 +8,7 @@ export const displayGrids = () => {
     for (let j=0; j<10; j++) {
       const cell = document.createElement('div')
       cell.classList.add('cell')
+      cell.classList.add('user')
       cell.id = `player-${i}-${j}`
       playerDiv.appendChild(cell)
     }
@@ -44,6 +45,7 @@ export const gameOverDisplay = (player) => {
 
 const showRestart = () => {
   const btn = document.getElementById('restart')
+  btn.textContent = 'Play again'
   btn.classList.add('show')
 }
 

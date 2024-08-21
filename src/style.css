@@ -82,3 +82,27 @@ body, html {
 #restart.show {
   display: block;
 }
+
+#bottom {
+  margin-top: 1em;
+}
+
+#change, #random {
+  cursor: pointer;
+  text-decoration: underline;
+  border: 0px;
+  background-color: transparent;
+  color: #4848ff;
+}
+
+.potential {
+  background-color: lightblue;
+}
+
+.toBeShip {
+  color: white
+}
+
+.last:hover {
+  box-shadow: 0px 0px 5px 5px #007bff;
+}
