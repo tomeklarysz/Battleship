@@ -1,5 +1,6 @@
+import { chooseShips } from './chooseShips'
 import { gameOverDisplay, updateTurnText } from './dom'
-import { placeDummies } from './dummies'
+import { placeDummiesOpp, placeDummiesUser } from './dummies'
 import { gameOver } from './gameOver'
 
 const player = require('./player')
@@ -13,7 +14,7 @@ const createPlayers = () => {
 }
 
 
-const renderCell = (players, i, j) => {
+export const renderCell = (players, i, j) => {
   const userBoard = players.user.gameboard.board
   const oppBoard = players.opp.gameboard.board
 
@@ -44,17 +45,39 @@ const renderCell = (players, i, j) => {
   }
 }
 
-const initialBoardRender = (players) => {
+export const initialBoardRender = (players) => {
 
   for (let i=0; i<10; i++) {
     for (let j=0; j<10; j++) {
       renderCell(players, i, j)
     }
   }
+  /*
+  let ships = players.user.gameboard.ships
+  let mergedShips = []
+  for (const ship of ships) {
+    mergedShips = mergedShips.concat(ship.placements)
+  }
+  console.log(mergedShips)
+  players.user.gameboard.forbiddenCells.forEach(item => {
+    let isShip = false
+    for (const ship of mergedShips) {
+      console.log(item)
+      console.log(ship)
+      if (JSON.stringify(item) === JSON.stringify(ship)) {
+        isShip = true
+        break
+      }
+    }
+    if (!isShip) {
+      document.getElementById(`player-${item[0]}-${item[1]}`).style.backgroundColor = 'lightgray'
+    }
+  })
+    */
 }
 
 
-const readCords = (cell) => {
+export const readCords = (cell) => {
   const row = cell.id.split('-')[1]
   const col = cell.id.split('-')[2]
   return [Number(row), Number(col)]
@@ -152,8 +175,11 @@ const sunk = (players, player, row, col) => {
 
 export const initialPlayers = () => {
   const players = createPlayers()
-  placeDummies(players)
+  console.log(players)  // for refernce
+  placeDummiesOpp(players)
+  placeDummiesUser(players)
   initialBoardRender(players)
+  chooseShips(players)
   userTurn(players)
   oppTurn(players)
 }

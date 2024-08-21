@@ -187,4 +187,4 @@ const create2DArray = (size) => {
   return array
 }
 
-module.exports = gameboard;
+module.exports = gameboard, create2DArray;

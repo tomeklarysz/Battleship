@@ -8,6 +8,7 @@ export const gameOver = () => {
     removeGrids()
     displayGrids()
     initialPlayers()
+    // we need to initialPlayrs without placing dummies but let player choose his own
     hideRestart()
     updateTurnText('Your')
   })
