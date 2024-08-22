@@ -121,5 +121,5 @@ body, html {
 
 .forbidden {
   cursor: default;
-  background-color: lightgray;
+  background-color: lightyellow;
 }
