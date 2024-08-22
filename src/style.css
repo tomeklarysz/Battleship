@@ -97,12 +97,29 @@ body, html {
 
 .potential {
   background-color: lightblue;
+  cursor: default;
 }
 
 .toBeShip {
   color: white
 }
 
+.toBeShip.show {
+  background-color: lightgray;
+  cursor: default;
+}
+
 .last:hover {
+  cursor: pointer;
   box-shadow: 0px 0px 5px 5px #007bff;
+}
+
+.user.point:hover {
+  cursor: pointer;
+  background-color: skyblue;
+}
+
+.forbidden {
+  cursor: default;
+  background-color: lightgray;
 }
