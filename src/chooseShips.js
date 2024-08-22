@@ -30,16 +30,20 @@ const pickOnlyFirstCell = (e) => {
       e.target.textContent = 1
       document.removeEventListener('click', pickOnlyFirstCell)
       document.querySelectorAll('.user').forEach(cell => {
-        cell.classList.toggle('point')
+        if (!cell.classList.contains('forbidden')) {
+          cell.classList.toggle('point')
+        }
       })
       calculatePotential(ships)
+      // if (ships.length == 0) {
+        // alert('no ships left')
+      // }
     }
   }
 }
 
 const calculatePotential = (ships) => {
   const potential = document.querySelector('.potential')
-  // potential.classList.toggle('point')
   const num = ships.slice(-1).pop()
   const cords = readCords(potential)
   const row = cords[0]
@@ -50,8 +54,9 @@ const calculatePotential = (ships) => {
 const showHoverInfo = (row, col, num) => {
 
   if (num === 1) {
-    //...
-    return
+    const current = document.getElementById(`player-${row}-${col}`)
+    addCellStyle(current, 0, num)
+    // return
   }
 
   document.addEventListener('mouseover', e => {
@@ -60,33 +65,83 @@ const showHoverInfo = (row, col, num) => {
       e.target.style.color = 'black'
     }
   })
-  console.log(row, col)
+
+
+  // check if not forbidden or ship function
+  const canBeShip = cell => {
+    return !(cell.classList.contains('forbidden') ||
+    cell.classList.contains('ship'))
+  }
+
   // left
   if (col - num + 1 >= 0) {
+    let valid = true
     for (let i=1; i<num; i++) {
       const current = document.getElementById(`player-${row}-${col - i}`)
-      addCellStyle(current, i, num)
+      if (!canBeShip(current)) {
+        valid = false
+        break
+      }
+    }
+    if (valid) {
+      for (let i=1; i<num; i++) {
+        const current = document.getElementById(`player-${row}-${col - i}`)
+        addCellStyle(current, i, num)
+      }
     }
   }
   // right
   if (col + num - 1 < 10) {
+    let valid = true
     for (let i=1; i<num; i++) {
       const current = document.getElementById(`player-${row}-${col + i}`)
-      addCellStyle(current, i, num)
+      if (!canBeShip(current)) {
+        valid = false
+        break
+      }
+    }
+    if (valid) {
+      for (let i=1; i<num; i++) {
+        const current = document.getElementById(`player-${row}-${col + i}`)
+        if (!canBeShip(current)) break
+        addCellStyle(current, i, num)
+      }
     }
   }
   // top
   if (row - num + 1 >= 0) {
+    let valid = true
     for (let i=1; i<num; i++) {
       const current = document.getElementById(`player-${row - i}-${col}`)
-      addCellStyle(current, i, num)
+      if (!canBeShip(current)) {
+        valid = false
+        break
+      }
+    }
+    if (valid) {
+      for (let i=1; i<num; i++) {
+        const current = document.getElementById(`player-${row - i}-${col}`)
+        if (!canBeShip(current)) break
+        addCellStyle(current, i, num)
+      }
     }
   }
   // bottom
   if (row + num - 1 < 10) {
+    let valid = true
     for (let i=1; i<num; i++) {
       const current = document.getElementById(`player-${row + i}-${col}`)
-      addCellStyle(current, i, num)
+      if (!canBeShip(current)) {
+        valid = false
+        break
+      }
+    }
+    if (valid) {
+      for (let i=1; i<num; i++) {
+        const current = document.getElementById(`player-${row + i}-${col}`)
+        if (!canBeShip(current)) break
+        addCellStyle(current, i, num)
+      }
     }
   }
 }
@@ -102,9 +157,6 @@ const addCellStyle = (current, index, num) => {
 
 const pickLastCell = (e, players) => {
   if (e.target.matches('.last')) {
-    if (ships.length === 0) {
-      alert('all ships chosen!')
-    }
     const size = ships.pop()
     const firstCords = readCords(document.querySelector('.potential'))
     const lastCords = readCords(e.target)
@@ -113,13 +165,18 @@ const pickLastCell = (e, players) => {
     removeCellStyle()
     initialBoardRender(players)
     addForbiddenStyle(players)
-    document.addEventListener('click', pickOnlyFirstCell)
-    document.querySelectorAll('.user').forEach(cell => {
-      if (!cell.classList.contains('ship') &&
-        !cell.classList.contains('forbidden')) {
-        cell.classList.toggle('point')
-      }
-    })
+    console.log(ships.length)
+    if (ships.length === 0) {
+      alert('all ships chosen!')
+    } else {
+      document.addEventListener('click', pickOnlyFirstCell)
+      document.querySelectorAll('.user').forEach(cell => {
+        if (!cell.classList.contains('ship') &&
+          !cell.classList.contains('forbidden')) {
+          cell.classList.toggle('point')
+        }
+      })
+    }
   }
 }
 
@@ -146,7 +203,6 @@ const addForbiddenStyle = (players) => {
     const col = item[1]
     const current = document.getElementById(`player-${row}-${col}`)
     if (!(current.classList.contains('ship'))) {
-      // current.classList.toggle('point')
       current.classList.add('forbidden')
     }
   })
