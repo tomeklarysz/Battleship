@@ -164,10 +164,11 @@ const gameboard = () => {
             if (ship.isSunk()) {
               board[row][col] = 'S'
             }
-            return true
+            break
           }
         }
       }
+      return true
     // when missed shot
     } else {
         board[row][col] = 'M'

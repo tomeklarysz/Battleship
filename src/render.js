@@ -1,5 +1,5 @@
 import { chooseShips } from './chooseShips'
-import { gameOverDisplay, updateTurnText } from './dom'
+import { gameOverDisplay, hideStart, showStart, updateTurnText } from './dom'
 import { placeDummiesOpp, placeDummiesUser } from './dummies'
 import { gameOver } from './gameOver'
 
@@ -94,11 +94,32 @@ const isUsersTurn = (players) => {
 
 
 const userTurn = (players) => {
-  const children = document.getElementById('opp').children
+  
+  // const children = document.getElementById('opp').children
+  // for (let i=0; i<children.length; i++) {
+    // children[i].addEventListener('click', () => {
+      // const cords = readCords(children[i])
+      // try {
+        // if (isUsersTurn(players)) {
+          // const isHit = players.opp.gameboard.receiveAttack(players.opp.gameboard.ships, cords[0], cords[1])
+          // if (!isHit) {
+            // players.opp.missedShots++
+            // updateTurnText('Computer\'s')
+          // }
+          // renderCell(players, cords[0], cords[1])
+        // }
+      // } catch (error) {
+        // console.error(error)
+        // alert('You\'ve already hit that cell!')
+      // }
+    // })
+  // }
+  document.addEventListener('click', userAttackEvent)
 
-  for (let i=0; i<children.length; i++) {
-    children[i].addEventListener('click', () => {
-      const cords = readCords(children[i])
+  function userAttackEvent(e) {
+    if (e.target.matches('.opp')) {
+      console.log(players)
+      const cords = readCords(e.target)
       try {
         if (isUsersTurn(players)) {
           const isHit = players.opp.gameboard.receiveAttack(players.opp.gameboard.ships, cords[0], cords[1])
@@ -112,7 +133,7 @@ const userTurn = (players) => {
         console.error(error)
         alert('You\'ve already hit that cell!')
       }
-    })
+    }
   }
 }
 
@@ -153,7 +174,7 @@ const sunk = (players, player, row, col) => {
     if (type === 'opp') name = 'You'
     else name = 'Computer'
     gameOverDisplay(name)
-    gameOver()
+    gameOver(players)
   }
 
   document.getElementById(`${type}-${row}-${col}`).classList.add('sunk')
@@ -174,12 +195,52 @@ const sunk = (players, player, row, col) => {
 }
 
 export const initialPlayers = () => {
-  const players = createPlayers()
+  let players = createPlayers()
   console.log(players)  // for refernce
   placeDummiesOpp(players)
   placeDummiesUser(players)
   initialBoardRender(players)
+  showStart()
   chooseShips(players)
-  userTurn(players)
-  oppTurn(players)
+  startGame(players)
+}
+
+export function startGame(players) {
+  
+  showStart()
+  
+  const btn = document.getElementById('start')
+  btn.addEventListener('click', startGameListener)
+  btn.addEventListener('click', hideStart)
+  
+  function startGameListener() {
+    userTurn(players)
+    oppTurn(players)
+    btn.removeEventListener('click', startGameListener)
+  }
+  
+}
+
+function startNewGame() {
+  showStart()
+  const start = document.getElementById('start')
+  start.addEventListener('click', listener)
+
+  function listener() {
+    hideStart()
+    start.removeEventListener('click', listener)
+  }
+}
+
+export const newGame = (players) => {
+  console.log('at the end of last game: \n', players)  // for refernce
+  players = createPlayers()
+  console.log('at the start of a new game: \n', players)  // for refernce
+  placeDummiesOpp(players)
+  placeDummiesUser(players)
+  initialBoardRender(players)
+  // chooseShips(players)
+  // startGame(players)
+  startNewGame()
+  return players
 }

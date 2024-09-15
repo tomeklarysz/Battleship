@@ -1,5 +1,6 @@
-import { initialBoardRender, renderCell, readCords } from "./render"
-import { removeGrids, displayGrids } from "./dom"
+import { initialBoardRender, newGame, readCords, start, startGame } from "./render"
+import { removeGrids, displayGrids, showStart, hideStart } from "./dom"
+import { placeDummiesOpp, placeDummiesUser } from './dummies'
 const gameboard = require('./gameboard')
 
 let ships = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
@@ -35,9 +36,6 @@ const pickOnlyFirstCell = (e) => {
         }
       })
       calculatePotential(ships)
-      // if (ships.length == 0) {
-        // alert('no ships left')
-      // }
     }
   }
 }
@@ -168,6 +166,10 @@ const pickLastCell = (e, players) => {
     console.log(ships.length)
     if (ships.length === 0) {
       alert('all ships chosen!')
+      removeForbiddenStyle()
+      placeDummiesOpp(players)
+      initialBoardRender(players)
+      showStart()
     } else {
       document.addEventListener('click', pickOnlyFirstCell)
       document.querySelectorAll('.user').forEach(cell => {
@@ -196,6 +198,12 @@ const removeCellStyle = () => {
   document.querySelector('.potential').classList.remove('potential')
 }
 
+const removeForbiddenStyle = () => {
+  document.querySelectorAll('.forbidden').forEach(item => {
+    item.classList.remove('forbidden')
+  })
+}
+
 const addForbiddenStyle = (players) => {
   const forbiddenCells = players.user.gameboard.forbiddenCells
   forbiddenCells.forEach(item => {
@@ -212,8 +220,17 @@ export const randomShips = (players) => {
 }
 
 export const chooseShips = (players) => {
-  const btn = document.getElementById('change')
-  btn.addEventListener('click', () => {
-    chooseShipsHandler(players)
-  })
+  const change = document.getElementById('change')
+  const start = document.getElementById('start')
+  
+  change.addEventListener('click', changeListener)
+  
+  function changeListener() {
+    if (start.classList.length > 0) { 
+      chooseShipsHandler(players)
+      players.opp.gameboard = gameboard()
+      hideStart()
+      change.removeEventListener('click', changeListener)
+    }
+  }
 }

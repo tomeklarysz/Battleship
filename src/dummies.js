@@ -14,6 +14,7 @@ export const placeDummiesOpp = (players) => {
 }
 
 export const placeDummiesUser = (players) => {
+  console.log('placing dummies on user')
   players.user.gameboard.placeShip(4, [2, 3], [5, 3])
   players.user.gameboard.placeShip(3, [1, 6], [3, 6])
   players.user.gameboard.placeShip(3, [7, 7], [7, 9])

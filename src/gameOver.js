@@ -1,15 +1,21 @@
-import { displayGrids, hideRestart, removeGrids, updateTurnText } from "./dom";
-import { initialPlayers } from "./render";
+import { displayGrids, hideStart, removeGrids, updateTurnText } from "./dom";
+import { initialBoardRender, initialPlayers, newGame } from "./render";
 
-export const gameOver = () => {
+export const gameOver = (players) => {
   
-  const btn = document.getElementById('restart')
-  btn.addEventListener('click', () => {
+  const btn = document.getElementById('start')
+  btn.textContent = 'Play again'
+  btn.addEventListener('click', gameOverListener)
+  
+  function gameOverListener() {
     removeGrids()
     displayGrids()
-    initialPlayers()
+    players = newGame(players)
+    console.log(players)
+    // initialBoardRender(players)
+    // initialPlayers()
     // we need to initialPlayrs without placing dummies but let player choose his own
-    hideRestart()
     updateTurnText('Your')
-  })
+    btn.removeEventListener('click', gameOverListener)
+  }
 }
