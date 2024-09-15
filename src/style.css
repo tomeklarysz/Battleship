@@ -10,7 +10,6 @@ body, html {
   justify-content: center;
   align-items: center;
   height: 100%;
-  gap: 25px;
 }
 
 #turn {
@@ -67,7 +66,7 @@ body, html {
   font-weight: bold;
 }
 
-#restart {
+#start {
   display: none;
   border-radius: 5px;
   background-color: #007bff;
@@ -79,7 +78,7 @@ body, html {
   cursor: pointer;
 }
 
-#restart.show {
+#start.show {
   display: block;
 }
 
@@ -93,6 +92,7 @@ body, html {
   border: 0px;
   background-color: transparent;
   color: #4848ff;
+  font-size: medium;
 }
 
 .potential {

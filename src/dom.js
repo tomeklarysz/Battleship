@@ -40,16 +40,16 @@ export const updateTurnText = (next) => {
 export const gameOverDisplay = (player) => {
   const div = document.getElementById('turn')
   div.textContent = `Game Over! ${player} win!`
-  showRestart()
+  showStart()
 }
 
-const showRestart = () => {
-  const btn = document.getElementById('restart')
-  btn.textContent = 'Play again'
+export const showStart = () => {
+  const btn = document.getElementById('start')
+  btn.textContent = 'Start'
   btn.classList.add('show')
 }
 
-export const hideRestart = () => {
-  const btn = document.getElementById('restart')
+export const hideStart = () => {
+  const btn = document.getElementById('start')
   btn.classList.remove('show')
 }
